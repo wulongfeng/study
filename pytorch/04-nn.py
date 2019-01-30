@@ -61,9 +61,11 @@ output = net(input)
 target = torch.randn(10)
 target = target.view(1, -1) #make it the same shape as output
 criterion = nn.MSELoss()
+#nn.CrossEntropyLoss用来计算交叉熵损失
 
 loss = criterion(output, target)
 print(loss)
+#需要注意的是，torch.nn只支持mini-batches，不支持一次只输入一个样本，即一次必须是一个batch。但如果只想输入一个样本，则用 input.unsqueeze(0)将batch_size设为１。例如 nn.Conv2d 输入必须是4维的，形如𝑛𝑆𝑎𝑚𝑝𝑙𝑒𝑠×𝑛𝐶ℎ𝑎𝑛𝑛𝑒𝑙𝑠×𝐻𝑒𝑖𝑔ℎ𝑡×𝑊𝑖𝑑𝑡ℎ。可将nSample设为1，即1*𝑛𝐶ℎ𝑎𝑛𝑛𝑒𝑙𝑠×𝐻𝑒𝑖𝑔ℎ𝑡×𝑊𝑖𝑑𝑡ℎ。
 
 
 #follow loss in the backward direction, get this graph of computations that looks like this:
@@ -111,7 +113,7 @@ optimizer.zero_grad()   # zero the gradient buffers
 output = net(input)
 loss = criterion(output, target)
 loss.backward()
-optimizer.step()    # Does the update
+optimizer.step()    # Does the update 更新参数
 
 #Observe how gradient buffers had to be manually set to zero using optimizer.zero_grad(). This is because gradients are accumulated as explained in Backprop section.
 
